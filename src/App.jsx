@@ -1,11 +1,12 @@
 import React from "react";
-import TodoList from "./components/todoList";  
+import { TaskProvider } from "./components/taskContext";
+import TodoList from "./components/todoList";
 
 const App = () => {
   return (
-    <div>
+    <TaskProvider>
       <TodoList />
-    </div>
+    </TaskProvider>
   );
 };
 

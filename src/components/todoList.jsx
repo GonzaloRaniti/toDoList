@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTasks } from "./taskContext";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -60,23 +61,20 @@ const TaskItem = styled.li`
   border-bottom: 1px solid #ccc;
 `;
 
-const TodoList = () => {
-  const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState("");
+const ErrorText = styled.p`
+  color: red;
+  font-size: 14px;
+`;
 
-  const addTask = () => {
+const TodoList = () => {
+  const [task, setTask] = useState("");
+  const { tasks, error, addTask, removeTask, clearTasks } = useTasks();
+
+  const handleAddTask = () => {
     if (task.trim() !== "") {
-      setTasks([...tasks, task]);
+      addTask(task);
       setTask("");
     }
-  };
-
-  const removeTask = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-  };
-
-  const clearTasks = () => {
-    setTasks([]);
   };
 
   return (
@@ -90,8 +88,9 @@ const TodoList = () => {
             value={task}
             onChange={(e) => setTask(e.target.value)}
           />
-          <Button onClick={addTask}>Agregar</Button>
+          <Button onClick={handleAddTask}>Agregar</Button>
         </InputContainer>
+        {error && <ErrorText>{error}</ErrorText>}
         <TaskList>
           {tasks.map((t, index) => (
             <TaskItem key={index}>
