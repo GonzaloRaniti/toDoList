@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useTasks } from "./taskContext";
+import { useDispatch, useSelector } from "react-redux"; 
+import { addTask, removeTask, clearTasks } from "./tasksSlice"; 
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -68,11 +69,12 @@ const ErrorText = styled.p`
 
 const TodoList = () => {
   const [task, setTask] = useState("");
-  const { tasks, error, addTask, removeTask, clearTasks } = useTasks();
+  const { tasks, error } = useSelector((state) => state.tasks); 
+  const dispatch = useDispatch(); 
 
   const handleAddTask = () => {
     if (task.trim() !== "") {
-      addTask(task);
+      dispatch(addTask(task)); 
       setTask("");
     }
   };
@@ -94,11 +96,11 @@ const TodoList = () => {
         <TaskList>
           {tasks.map((t, index) => (
             <TaskItem key={index}>
-              {t} <Button danger onClick={() => removeTask(index)}>Borrar</Button>
+              {t} <Button danger onClick={() => dispatch(removeTask(index))}>Borrar</Button>
             </TaskItem>
           ))}
         </TaskList>
-        {tasks.length > 0 && <Button danger onClick={clearTasks}>Borrar todas</Button>}
+        {tasks.length > 0 && <Button danger onClick={() => dispatch(clearTasks())}>Borrar todas</Button>}
       </Card>
     </Container>
   );
